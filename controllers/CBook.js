@@ -22,25 +22,19 @@ class CBook
         }
     }
 
-    static async createLinkedItem(bookId, author)
-    {
-        if(typeof bookId === 'number' && typeof author === 'number')
-        {
-            await AuthorToBook.create({bookId: bookId, authorId: author })
-        }
-    }
-
     async add(req, res)
     {
         try
         {
+            // expected type of authors is array
+
             const { title, pageCount, publishedDate, thumbnailUrl, shortDescription, longDescription, status, authors } = req.body
             const book = await Book.create({title, pageCount, publishedDate, thumbnailUrl, shortDescription, longDescription, status})
 
             if(book._id > 0 && authors.length > 0)
             {
-                authors.forEach(async (authorId) => {
-                    await CBook.createLinkedItem(book._id, authorId)
+                authors.forEach(async (authorId) => { // Sorry
+                    await CBook.createLinkedItem(book._id, authorId) // Here we are creating intermediary record of many-to-many
                 })
             }
 
@@ -94,6 +88,14 @@ class CBook
         catch (e)
         {
             res.json({ error: true, message: e.message })
+        }
+    }
+
+    static async createLinkedItem(bookId, author)
+    {
+        if(typeof bookId === 'number' && typeof author === 'number')
+        {
+            await AuthorToBook.create({bookId: bookId, authorId: author })
         }
     }
 
