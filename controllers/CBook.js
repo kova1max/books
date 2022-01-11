@@ -4,13 +4,12 @@ class CBook {
 
     async list(req, res)
     {
-
         try {
             const books = await Book.findAll()
 
             const result = []
 
-            books.forEach(({dataValues}) => {
+            books.forEach(({ dataValues }) => {
                 result.push(dataValues)
             })
 
@@ -18,24 +17,23 @@ class CBook {
         }
         catch (e)
         {
-            res.json({error: true, message: e.message})
+            res.json({ error: true, message: e.message })
         }
     }
 
     async add(req, res)
     {
-
         try
         {
             const { title, pageCount, publishedDate, thumbnailUrl, shortDescription, longDescription, status } = req.body
 
             await Book.create({title, pageCount, publishedDate, thumbnailUrl, shortDescription, longDescription, status})
 
-            res.status(200).json({result: true})
+            res.status(200).json({ result: true })
         }
         catch (e)
         {
-            res.json({error: true, message: e.message})
+            res.json({ error: true, message: e.message })
         }
 
     }
@@ -68,7 +66,7 @@ class CBook {
         }
         catch (e)
         {
-            res.json({error: true, message: e.message})
+            res.json({ error: true, message: e.message })
         }
     }
 
