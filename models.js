@@ -10,7 +10,6 @@ const Book = sequelize.define('book', {
     shortDescription: { type: DataTypes.TEXT, allowNull: true },
     longDescription: { type: DataTypes.TEXT, allowNull: true },
     status: { type: DataTypes.STRING, defaultValue: 'NOT_PUBLISHED' },
-    author: { type: DataTypes.STRING, allowNull: false }
 })
 
 const AuthorToBook = sequelize.define('atb', {

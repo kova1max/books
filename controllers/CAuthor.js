@@ -1,4 +1,4 @@
-const { Book, Author } = require('../models')
+const { Author } = require('../models')
 
 class CAuthor {
 
@@ -6,21 +6,32 @@ class CAuthor {
     {
         try
         {
-            res.status(200)
+            if( req.body.name !== undefined )
+            {
+                await Author.create({ name: req.body.name })
+                res.status(200).json({ result: true })
+            }
+            res.status(404).json({ error: true, message: 'Error.' })
         }
         catch (e)
         {
             res.json({ error: true, message: e.message })
         }
-
     }
 
     async remove(req, res)
     {
-        try {
-            res.status(200)
+        try
+        {
+            if( req.body.id !== undefined )
+            {
+                await Author.destroy({ where: { _id: req.body.id } })
+                res.status(200).json({ result: true })
+            }
+            res.status(404).json({ error: true, message: 'Error.' })
         }
-        catch (e) {
+        catch (e)
+        {
             res.json({ error: true, message: e.message })
         }
     }
