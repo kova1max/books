@@ -1,6 +1,7 @@
 const { Author } = require('../models')
 
-class CAuthor {
+class CAuthor
+{
 
     async add(req, res)
     {

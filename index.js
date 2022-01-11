@@ -12,7 +12,8 @@ server.use('/api', router)
 
 const start = async () => {
 
-    try {
+    try
+    {
         await sequelize.authenticate()
         await sequelize.sync()
 
@@ -25,4 +26,4 @@ const start = async () => {
 
 }
 
-start()
+start().then(() => console.log('finish'))

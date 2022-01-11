@@ -24,4 +24,4 @@ const Author = sequelize.define('author', {
 Book.belongsToMany(Author, { through: AuthorToBook })
 Author.belongsToMany(Book, { through: AuthorToBook })
 
-module.exports = { Book, Author }
+module.exports = { Book, Author, AuthorToBook }

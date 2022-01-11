@@ -1,14 +1,15 @@
-const { Book, Author } = require('../models')
+const { Book, AuthorToBook } = require('../models')
 
-class CBook {
+class CBook
+{
 
     async list(req, res)
     {
-        try {
+        try
+        {
             const books = await Book.findAll()
 
             const result = []
-
             books.forEach(({ dataValues }) => {
                 result.push(dataValues)
             })
@@ -21,13 +22,27 @@ class CBook {
         }
     }
 
+    static async createLinkedItem(bookId, author)
+    {
+        if(typeof bookId === 'number' && typeof author === 'number')
+        {
+            await AuthorToBook.create({bookId: bookId, authorId: author })
+        }
+    }
+
     async add(req, res)
     {
         try
         {
-            const { title, pageCount, publishedDate, thumbnailUrl, shortDescription, longDescription, status } = req.body
+            const { title, pageCount, publishedDate, thumbnailUrl, shortDescription, longDescription, status, authors } = req.body
+            const book = await Book.create({title, pageCount, publishedDate, thumbnailUrl, shortDescription, longDescription, status})
 
-            await Book.create({title, pageCount, publishedDate, thumbnailUrl, shortDescription, longDescription, status})
+            if(book._id > 0 && authors.length > 0)
+            {
+                authors.forEach(async (authorId) => {
+                    await CBook.createLinkedItem(book._id, authorId)
+                })
+            }
 
             res.status(200).json({ result: true })
         }
@@ -35,7 +50,6 @@ class CBook {
         {
             res.json({ error: true, message: e.message })
         }
-
     }
 
     async update(req, res)
@@ -62,7 +76,6 @@ class CBook {
             await book.save()
 
             res.status(200).json({ result: true })
-
         }
         catch (e)
         {
@@ -72,12 +85,14 @@ class CBook {
 
     async remove(req, res)
     {
-        try {
+        try
+        {
             const { id } = req.body
             await Book.destroy({ where: { _id: id } })
             res.status(200).json({ result: true })
         }
-        catch (e) {
+        catch (e)
+        {
             res.json({ error: true, message: e.message })
         }
     }
