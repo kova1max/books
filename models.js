@@ -1,53 +1,28 @@
-const { Book, Author } = require('../models')
+const sequelize = require('./db')
+const { DataTypes } = require('sequelize')
 
-class CAuthor {
+const Book = sequelize.define('book', {
+    _id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    title: { type: DataTypes.STRING, minLength: 5, allowNull: false },
+    pageCount: { type: DataTypes.INTEGER, minLength: 1, allowNull: true },
+    publishedDate: { type: DataTypes.DATE, allowNull: false },
+    thumbnailUrl: { type: DataTypes.STRING, allowNull: true },
+    shortDescription: { type: DataTypes.TEXT, allowNull: true },
+    longDescription: { type: DataTypes.TEXT, allowNull: true },
+    status: { type: DataTypes.STRING, defaultValue: 'NOT_PUBLISHED' },
+    author: { type: DataTypes.STRING, allowNull: false }
+})
 
-    async list(req, res)
-    {
-        try {
-            res.status(200).json({ result: true })
-        }
-        catch (e)
-        {
-            res.json({ error: true, message: e.message })
-        }
-    }
+const AuthorToBook = sequelize.define('atb', {
+    _id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+})
 
-    async add(req, res)
-    {
-        try
-        {
-            res.status(200).json({ result: true })
-        }
-        catch (e)
-        {
-            res.json({ error: true, message: e.message })
-        }
+const Author = sequelize.define('author', {
+    _id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING, allowNull: false }
+})
 
-    }
+Book.belongsToMany(Author, { through: AuthorToBook })
+Author.belongsToMany(Book, { through: AuthorToBook })
 
-    async update(req, res)
-    {
-        try
-        {
-            res.status(200).json({ result: true })
-        }
-        catch (e)
-        {
-            res.json({ error: true, message: e.message })
-        }
-    }
-
-    async remove(req, res)
-    {
-        try {
-            res.status(200).json({ result: true })
-        }
-        catch (e) {
-            res.json({ error: true, message: e.message })
-        }
-    }
-
-}
-
-module.exports = new CAuthor()
+module.exports = { Book, Author }
